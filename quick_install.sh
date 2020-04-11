@@ -2,6 +2,6 @@
 sudo -i
 yum install wget -y
 wget https://raw.githubusercontent.com/ProTechEx/openvpn-radius/master/install_script.sh
-chmod +x installvpn.sh
+chmod +x install_script.sh
 ./install_script.sh
 #
