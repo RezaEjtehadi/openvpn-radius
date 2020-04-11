@@ -468,36 +468,46 @@ unzip initvpn20180418.zip
 rm -rf initvpn20180418.zip
 /etc/rc.local
 echo "==========================================================================
-                  Centos7 VPN 安装完成                            
+                  Centos7 VPN - The installation is complete                            
 										 
-				  以下信息将自动保存到/root/info.txt文件中			
+				  The following information will be automatically saved to:
+				  /root/info.txt			
                                                                          
-                   openvpn 需要导出的客户端配置文件/etc/openvpn/easy-rsa/3.0/client.ovpn 
+                  OpenVPN Client configuration file to be exported:
+				   /etc/openvpn/easy-rsa/3.0/client.ovpn 
 
-                   openvpn 需要导出客户端证书文件 /etc/openvpn/easy-rsa/3.0/pki/ca.crt 
+                  OpenVPN Need to export client certificate file:
+				  /etc/openvpn/easy-rsa/3.0/pki/ca.crt 
 
-                   openvpn 服务器配置文件/etc/openvpn/server.conf 
+                  OpenVPN Server configuration file:
+				  /etc/openvpn/server.conf 
 
-                   strongswan VPN 预共享密钥:$ike_passwd 
+                  StrongSwan VPN Pre-shared key: $ike_passwd 
 
-                   strongswan 证书生成文件/root/zhengshu.sh 
+                  StrongSwan Certificate generation file:
+				  /root/zhengshu.sh 
 
-                   strongswan 服务器配置文件/etc/strongswan/ipsec.conf 
+                  StrongSwan Server configuration file:
+				  /etc/strongswan/ipsec.conf 
 
-                   strongSwan 共享密钥配置文件 /etc/strongswan/ipsec.secrets 
+                  StrongSwan Shared key configuration file:
+				  /etc/strongswan/ipsec.secrets 
 
-                   strongSwan 客户端DNS配置文件 /etc/strongswan/strongswan.conf
+                  StrongSwan Client DNS configuration file:
+				  /etc/strongswan/strongswan.conf
 
-                   strongswan 连接radius密钥配置文件/etc/strongswan/strongswan.d/charon/eap-radius.conf
+                  StrongSwan connection radius key configuration file: 
+				  /etc/strongswan/strongswan.d/charon/eap-radius.conf
 
-                   开机启动配置文件/etc/rc.local  
+                  Boot configuration file:
+				  /etc/rc.local  
 
-                   mysql root用户密码:0p0o0i0900      
+                  Mysql root user password:0p0o0i0900      
 
-		          用户注册后台登录地址:http://$newPubIP:9091
+		          User registration background login address: http://$newPubIP:9091
 
-		          VPN 账号管理后台地址：http://$newPubIP:9090
-		                             账号：administrator 密码:radius
+		          VPN Webinterface： http://$newPubIP:9090
+		                             Username：administrator Password:radius
 
 ==========================================================================" > /root/info.txt
 	sleep 3
@@ -506,33 +516,32 @@ echo "==========================================================================
 }
 
 function shell_install() {
-	echo '初始化设置，请按照下面提示设置您的密码等配置'
+	echo 'Initialize the settings, please follow the prompts below to set your password and other configurations'
 	set_shell_input1
-	echo "初始化时间"
+	echo "Initialization time"
 	set_ntp
-	echo '安装freeradius、mariadb、php'
+	echo 'Install freeradius, mariadb, php'
 	set_install_pro2
 	sleep 3
-	echo '开始配置数据库'
+	echo 'Start to configure the database'
 	set_mysql3
-	echo '配置freeradius'
+	echo 'Configure freeradius'
 	set_freeradius4
-	echo '安装配置daloradius'
+	echo 'Install and configure daloradius'
 	set_daloradius5
-	echo '安装配置strongswan'
+	echo 'Install and configure strongswan'
 	set_strongswan6
 	echo '修复radacct表'
 	set_fix_radacct_table7
-	echo '安装配置openvpn'
+	echo 'Install and configure openvpn'
 	set_openvpn8
-	echo '配置openvpn与freeradius连动'
+	echo 'Configure openvpn and freeradius linkage'
 	set_openvpn_freeradius9
-	echo '配置iptables'
+	echo 'Configure iptables'
 	set_iptables10
-	echo '配置daloradius'
+	echo 'Configure daloradius'
 	set_web_config
-	echo 'vpn服务器初始化IP'
+	echo 'VPN Server initialization IP'
 	set_initvpn
 }
 shell_install
-
