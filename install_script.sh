@@ -11,7 +11,7 @@ function set_ntp(){
 	crontab /tmp/crontab.back
 	systemctl restart crond
 }
-#获取公网ip，设置共享密钥
+#Get public IP, set shared key
 function set_shell_input1() {
 	clear	
 	sqladmin=0p0o0i0900
@@ -21,7 +21,7 @@ function set_shell_input1() {
 yum install network-tools -y
 }
 function set_install_pro2(){
-	#解决ssh访问慢的问题,可以安装完脚本后手工重启ssh
+	#Solve the problem of slow ssh access, you can manually restart ssh after installing the script
 	sed -i "s/GSSAPIAuthentication yes/GSSAPIAuthentication no/g" /etc/ssh/sshd_config
 	alias cp='cp'
 	yum groupinstall "Development tools" -y
@@ -32,7 +32,7 @@ function set_install_pro2(){
 	systemctl stop firewalld
 	systemctl disable firewalld
 }
-#配置radius数据库并导入数据
+# Configure radius database and import data
 function set_mysql3() {
 	systemctl restart mariadb
 	sleep 3
@@ -49,10 +49,10 @@ function set_freeradius4(){
 	sed -i "s/auth_badpass = no/auth_badpass = yes/g" /etc/raddb/radiusd.conf
 	sed -i "s/auth_goodpass = no/auth_goodpass = yes/g" /etc/raddb/radiusd.conf
 	sed -i "s/\-sql/sql/g" /etc/raddb/sites-available/default
-	#在查找到的session {字符串后面插入内容
+	#Insert content after the found session {string
 	sed -i '/session {/a\        sql' /etc/raddb/sites-available/default
 	sed -i 's/driver = "rlm_sql_null"/driver = "rlm_sql_mysql"/g' /etc/raddb/mods-available/sql	
-	#查找到字符串，去掉首字母为的注释#
+	#Find the string, remove the comment with the first letter #
 	sed -i '/read_clients = yes/s/^#//' /etc/raddb/mods-available/sql
 	sed -i '/dialect = "sqlite"/s/^#//' /etc/raddb/mods-available/sql
 	sed -i 's/dialect = "sqlite"/dialect = "mysql"/g' /etc/raddb/mods-available/sql	
@@ -122,49 +122,49 @@ cat >>  /etc/strongswan/ipsec.conf <<EOF
 config setup
     uniqueids=never          
 conn %default
-     keyexchange=ike              #ikev1 或 ikev2 都用这个
+     keyexchange=ike              # ikev1 or ikev2 use this
      ike=aes256-sha1-modp1024,aes128-sha1-modp1024,3des-sha1-modp1024!
      esp=aes256-sha256,aes256-sha1,3des-sha1!
      auto=start
      closeaction = clear
-     dpddelay = 60s        #每60秒向客户发送数据包以检测用户是否在线，不在线则断开！
-     dpdtimeout = 120s   #120秒内没收到用户发回的数据包则强制断开！ 
-     inactivity = 30m  #30分钟内用户与服务器没有数据交互则强制断开！
-     ikelifetime = 8h   #每次连接的最长有效期，超过有效期则自动重新连接
-     keyingtries = 3   #连接最大尝试数
+     dpddelay = 60s        # Send a data packet to the customer every 60 seconds to detect whether the user is online or disconnect when not online
+     dpdtimeout = 120s   # 120 seconds, if you do not receive the data packet sent back by the user, you will be forced to disconnect!
+     inactivity = 30m  # For 30 minutes, if there is no data interaction between the user and the server, it will be forcibly disconnected!
+     ikelifetime = 8h   # The maximum validity period of each connection, if it exceeds the validity period, it will automatically reconnect
+     keyingtries = 3   # Maximum connection attempts
      lifetime=1h
-     margintime = 5m   #ikelifetime 超时前5分钟重新协商连接，以免被强制断开！
-     dpdaction = clear   #清除不响应用户的所有缓存、安全信息，Dead Peer Detection
-     left=%any                    #服务器端标识,%any表示任意
-     leftsubnet=0.0.0.0/0         #服务器端虚拟ip, 0.0.0.0/0表示通配.
-     right=%any                   #客户端标识,%any表示任意
+     margintime = 5m   # ikelifetime renegotiates the connection 5 minutes before the timeout, so as not to be forced to disconnect!
+     dpdaction = clear   # Clear all cache and security information that does not respond to users, Dead Peer Detection
+     left=%any                    # Server-side logo, %any means any
+     leftsubnet=0.0.0.0/0         # Server-side virtual ip, 0.0.0.0/0 means wildcard.
+     right=%any                   # Client ID, %any means any
 conn IKE-BASE
-    leftca=ca.cert.pem           #服务器端 CA 证书
-    leftcert=server.cert.pem     #服务器端证书
-    rightsourceip=10.0.0.0/24    #分配给客户端的虚拟 ip 段，格式为：单个IP或1.1.1.1-1.1.1.5或1.1.1.0/24
+    leftca=ca.cert.pem           #Server-side CA certificate
+    leftcert=server.cert.pem     #Server certificate
+    rightsourceip=10.0.0.0/24    #The virtual IP segment assigned to the client, the format is: single IP or 1.1.1.1-1.1.1.5 or 1.1.1.0/24
  
-#供 ios 使用, 使用客户端证书
+#For ios use, use client certificate
 conn IPSec-IKEv1
     also=IKE-BASE
     keyexchange=ikev1
-    fragmentation=yes         #开启对 iOS 拆包的重组支持
+    fragmentation=yes         #Enable reorganization support for iOS unpacking
     leftauth=pubkey
     rightauth=pubkey
-    rightauth2=xauth-radius  #使用radius
+    rightauth2=xauth-radius  #Use radius
     rightcert=client.cert.pem
     auto=add
  
-#供 ios 使用, 使用 PSK 预设密钥
+#For ios use, use PSK preset key
 conn IPSec-IKEv1-PSK
     also=IKE-BASE
     keyexchange=ikev1
     fragmentation=yes
     leftauth=psk
     rightauth=psk
-    rightauth2=xauth-radius #使用radius
+    rightauth2=xauth-radius #Use radius
     auto=add
  
-#供 使用ikev2 协议连接使用（osx、windows、ios）
+#For connection using ikev2 protocol (osx, windows, ios)
 conn IPSec-IKEv2
     keyexchange=ikev2
     ike=aes256-sha256-modp1024,3des-sha1-modp1024,aes256-sha1-modp1024!
@@ -184,18 +184,18 @@ conn IPSec-IKEv2
     fragmentation=yes
     auto=add
  
-#供 windows 7+ 使用, win7 以下版本需使用第三方 ipsec vpn 客户端连接
+#For windows 7+ use, the version below win7 needs to use a third-party ipsec vpn client to connect
 conn IPSec-IKEv2-EAP
     also=IKE-BASE
     keyexchange=ikev2
-    #ike=aes256-sha1-modp1024!   #第一阶段加密方式
-    rekey=no                     #服务器对 Windows 发出 rekey 请求会断开连接
+    #ike=aes256-sha1-modp1024!   #First stage encryption
+    rekey=no                     #The server sends a rekey request to Windows will disconnect
     leftauth=pubkey
     rightauth=eap-radius
-    rightsendcert=never          #服务器不要向客户端请求证书
+    rightsendcert=never          #The server should not request a certificate from the client
     eap_identity=%any
     auto=add
-#供linux客户端
+#For linux client
 conn ipke2vpn
     keyexchange=ikev2
     ike=aes256-sha1-modp1024,aes128-sha1-modp1024,3des-sha1-modp1024!
@@ -236,12 +236,12 @@ charon {
 include strongswan.d/*.conf
 EOF
 sed -i "s/# accounting = no/accounting = yes/g" /etc/strongswan/strongswan.d/charon/eap-radius.conf 
-#\n是回车 \t tab
+#\nIndent \t tab
 sed -i '/servers {/a\ \t radius{\n \t address = 127.0.0.1 \n \t secret = testing123 \n \t \t }' /etc/strongswan/strongswan.d/charon/eap-radius.conf 
 sed -i "s/# backend = radius/ backend = radius/g" /etc/strongswan/strongswan.d/charon/xauth-eap.conf
 cat >>  /etc/strongswan/ipsec.secrets <<EOF
-: RSA server.key.pem #使用证书验证时的服务器端私钥
-: PSK $ike_passwd #使用预设密钥时, 8-63位ASCII字符
+: RSA server.key.pem #Server-side private key when using certificate verification
+: PSK $ike_passwd #When using the preset key, 8-63 ASCII characters
 : XAUTH $ike_passwd
 EOF
 chmod o+r /etc/strongswan/ipsec.secrets
@@ -303,12 +303,12 @@ ca /etc/openvpn/easy-rsa/3.0/pki/ca.crt
 cert /etc/openvpn/easy-rsa/3.0/pki/issued/server.crt
 key /etc/openvpn/easy-rsa/3.0/pki/private/server.key
 dh /etc/openvpn/easy-rsa/3.0/pki/dh.pem
-#plugin /usr/share/openvpn/plugin/lib/openvpn-auth-pam.so /etc/pam.d/login # 如果使用freeradius，请注释这一行
-plugin /etc/openvpn/radiusplugin.so /etc/openvpn/radiusplugin.cnf # 如果使用freeradius，请去掉这一行的注释
-server 10.8.0.0 255.255.255.0 # 分配给VPN客户端的地址范围
+#plugin /usr/share/openvpn/plugin/lib/openvpn-auth-pam.so /etc/pam.d/login # If using freeradius, please comment this line
+plugin /etc/openvpn/radiusplugin.so /etc/openvpn/radiusplugin.cnf # If using freeradius, please remove the comment on this line
+server 10.8.0.0 255.255.255.0 # The range of addresses assigned to VPN clients
 ifconfig-pool-persist ipp.txt
 push "redirect-gateway def1"
-push "route 192.168.0.0 255.255.255.0"    #指定VPN客户端访问你服务器的内网网段
+push "route 192.168.0.0 255.255.255.0"    #Specify the VPN client to access the intranet segment of your server
 push "dhcp-option DNS 8.8.8.8"
 push "dhcp-option DNS 8.8.4.4"
 keepalive 2 20
@@ -320,7 +320,7 @@ log-append openvpn.log
 verb 3
 #script-security 3
 #auth-user-pass-verify /etc/openvpn/checkpsw.sh via-env
-client-cert-not-required            #启用后，就关闭证书认证，只通过账号密码认证
+client-cert-not-required            #After it is enabled, the certificate authentication is turned off, and only the account password authentication is adopted
 username-as-common-name
 EOF
 touch /etc/openvpn/easy-rsa/3.0/client.ovpn
