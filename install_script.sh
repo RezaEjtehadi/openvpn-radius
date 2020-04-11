@@ -531,7 +531,7 @@ function shell_install() {
 	set_daloradius5
 	echo 'Install and configure strongswan'
 	set_strongswan6
-	echo '修复radacct表'
+	echo 'Repair radacct table'
 	set_fix_radacct_table7
 	echo 'Install and configure openvpn'
 	set_openvpn8
