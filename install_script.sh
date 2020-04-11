@@ -442,7 +442,7 @@ systemctl restart crond
 
 function set_initvpn(){
 netcard_name=`ifconfig | head -1 | awk -F ":" '{print$1}'`
-#调整公网IP地址
+#Adjust the public IP address
 newPubIP=`lynx --source www.monip.org | sed -nre 's/^.* (([0-9]{1,3}\.){3}[0-9]{1,3}).*$/\1/p'`
     sed -r 's/(\b[0-9]{1,3}\.){3}[0-9]{1,3}\b'/$newPubIP/g -i /var/www/html/user_reg_new/class.user.php
     sed -r 's/(\b[0-9]{1,3}\.){3}[0-9]{1,3}\b'/$newPubIP/g -i  /var/www/html/daloradius/library/exten-welcome_page.php
