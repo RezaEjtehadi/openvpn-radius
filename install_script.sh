@@ -353,8 +353,8 @@ function set_openvpn_freeradius9(){
 	make
 	cp -rf radiusplugin.so /etc/openvpn/
 	cp -rf radiusplugin.cnf /etc/openvpn/
-	sed -i "s/name=192.168.0.153/name=127.0.0.1/g" /etc/openvpn/radiusplugin.cnf
-	sed -i "s/sharedsecret=testpw/sharedsecret=testing123/g" /etc/openvpn/radiusplugin.cnf
+	sed -i "s/name=192.168.0.153/name=49.12.203.127/g" /etc/openvpn/radiusplugin.cnf
+	sed -i "s/sharedsecret=testpw/sharedsecret=set/g" /etc/openvpn/radiusplugin.cnf
 	systemctl restart openvpn@server
 }
 function set_iptables10(){
@@ -521,18 +521,18 @@ function shell_install() {
 	echo "Initialization time"
 	set_ntp
 	echo 'Install freeradius, mariadb, php'
-	set_install_pro2
+#	set_install_pro2
 	sleep 3
 	echo 'Start to configure the database'
-	set_mysql3
+#	set_mysql3
 	echo 'Configure freeradius'
-	set_freeradius4
+#	set_freeradius4
 	echo 'Install and configure daloradius'
-	set_daloradius5
+#	set_daloradius5
 	echo 'Install and configure strongswan'
-	set_strongswan6
+#	set_strongswan6
 	echo 'Repair radacct table'
-	set_fix_radacct_table7
+#	set_fix_radacct_table7
 	echo 'Install and configure openvpn'
 	set_openvpn8
 	echo 'Configure openvpn and freeradius linkage'
@@ -540,7 +540,7 @@ function shell_install() {
 	echo 'Configure iptables'
 	set_iptables10
 	echo 'Configure daloradius'
-	set_web_config
+	#set_web_config
 	echo 'VPN Server initialization IP'
 	set_initvpn
 }
