@@ -517,12 +517,12 @@ echo "==========================================================================
 
 function shell_install() {
 	echo 'Initialize the settings, please follow the prompts below to set your password and other configurations'
-#	set_shell_input1
+	set_shell_input1
 	echo "Initialization time"
-#	set_ntp
+	set_ntp
 	echo 'Install freeradius, mariadb, php'
-#	set_install_pro2
-#	sleep 3
+	set_install_pro2
+	sleep 3
 	echo 'Start to configure the database'
 #	set_mysql3
 	echo 'Configure freeradius'
@@ -532,7 +532,7 @@ function shell_install() {
 	echo 'Install and configure strongswan'
 #	set_strongswan6
 	echo 'Repair radacct table'
-#	set_fix_radacct_table7
+	set_fix_radacct_table7
 	echo 'Install and configure openvpn'
 	set_openvpn8
 	echo 'Configure openvpn and freeradius linkage'
